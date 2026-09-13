@@ -1,4 +1,4 @@
-/* TERSA · tienda (catálogo, picks, kits, ficha, bolsa con código y sugerencias, pedido). Vanilla, sin dependencias. */
+/* PULIRA · tienda (catálogo, picks, kits, ficha, bolsa con código y sugerencias, pedido). Vanilla, sin dependencias. */
 (function () {
   'use strict';
   var GLIFOS = {
@@ -30,8 +30,8 @@
   var esc = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); };
   var filtro = 'todo', q = '';
   var bolsa = {}, promo = {};
-  try { bolsa = JSON.parse(localStorage.getItem('tersa-bolsa') || '{}'); } catch (e) { bolsa = {}; }
-  try { promo = JSON.parse(localStorage.getItem('tersa-promo') || '{}'); } catch (e) { promo = {}; }
+  try { bolsa = JSON.parse(localStorage.getItem('pulira-bolsa') || '{}'); } catch (e) { bolsa = {}; }
+  try { promo = JSON.parse(localStorage.getItem('pulira-promo') || '{}'); } catch (e) { promo = {}; }
 
   // Catálogo activo + copy de ventas fusionado
   var P = CATALOGO.filter(function (p) { return p.activo !== false; }).map(function (p) { return Object.assign({}, p, (typeof COPY !== 'undefined' && COPY[p.id]) || {}); });
@@ -41,7 +41,7 @@
 
   /* ---- imágenes: foto si existe, glifo si no ---- */
   function svg(glifo) { return '<svg viewBox="0 0 120 120" aria-hidden="true">' + (GLIFOS[glifo] || GLIFOS.kit) + '</svg>'; }
-  window.TERSA_glifo = function (img) { var g = img.getAttribute('data-glifo'); var span = document.createElement('span'); span.innerHTML = svg(g); img.replaceWith(span.firstChild); };
+  window.PULIRA_glifo = function (img) { var g = img.getAttribute('data-glifo'); var span = document.createElement('span'); span.innerHTML = svg(g); img.replaceWith(span.firstChild); };
   var FOTOS = (typeof window.FOTOS === 'object' && window.FOTOS) || {};
   function vistas(p) { var v = FOTOS[p.id]; return Array.isArray(v) ? v : (v ? ['principal'] : []); }
   function fotoSrc(p, vista) { return 'img/p/' + p.id + (vista === 'principal' ? '' : '-' + vista) + '.jpg'; }
@@ -51,7 +51,7 @@
     var src = p.img || (vs.length ? fotoSrc(p, 'principal') : '');
     var alt = vs.indexOf('detalle') >= 0 ? '<img loading="lazy" class="alt" src="' + fotoSrc(p, 'detalle') + '" alt="">' : '';
     return '<div class="tile" data-ver="' + p.id + '"><span class="cod mono">' + esc(p.codigo) + '</span>' + (extra || '') +
-      (src ? '<img loading="lazy" src="' + esc(src) + '" alt="' + esc(p.nombre) + '" data-glifo="' + esc(p.glifo) + '" onerror="TERSA_glifo(this)">' + alt : svg(p.glifo)) + '</div>';
+      (src ? '<img loading="lazy" src="' + esc(src) + '" alt="' + esc(p.nombre) + '" data-glifo="' + esc(p.glifo) + '" onerror="PULIRA_glifo(this)">' + alt : svg(p.glifo)) + '</div>';
   }
   function galeria(p) {
     var vs = vistas(p);
@@ -81,7 +81,7 @@
     t.addEventListener('click', function () { abreFicha(p.id); });
     t.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abreFicha(p.id); } });
   })();
-  (function () { var c = $('coleccion'); if (c && FOTOS.coleccion) c.innerHTML = '<img src="img/coleccion.jpg" alt="Colección TERSA: los dispositivos del catálogo" loading="lazy">'; })();
+  (function () { var c = $('coleccion'); if (c && FOTOS.coleccion) c.innerHTML = '<img src="img/coleccion.jpg" alt="Colección PULIRA: los dispositivos del catálogo" loading="lazy">'; })();
   function pintaPicks() {
     if (!$('picks')) return;
     $('picks').innerHTML = PICKS.map(function (pk, i) {
@@ -156,7 +156,7 @@
   function cierraFicha() { $('modal').classList.remove('on'); document.body.style.overflow = ''; }
 
   /* ---- bolsa ---- */
-  function guarda() { try { localStorage.setItem('tersa-bolsa', JSON.stringify(bolsa)); localStorage.setItem('tersa-promo', JSON.stringify(promo)); } catch (e) {} }
+  function guarda() { try { localStorage.setItem('pulira-bolsa', JSON.stringify(bolsa)); localStorage.setItem('pulira-promo', JSON.stringify(promo)); } catch (e) {} }
   function promoActiva() { return !!(CONFIG.promo && CONFIG.promo.activa && promo.codigo && promo.codigo.toUpperCase() === String(CONFIG.promo.codigo).toUpperCase()); }
   function totales() {
     var sub = 0, n = 0;
@@ -213,7 +213,7 @@
   function textoPedido(items) {
     var t = totales();
     var lineas = Object.keys(items).map(function (id) { var p = byId(id); return '• ' + items[id] + ' × ' + p.nombre + ' (' + p.codigo + ') — ' + MXN(p.precio * items[id]); });
-    return 'Hola TERSA, quiero pedir:\n' + lineas.join('\n') + '\nSubtotal ' + MXN(t.sub) + (t.desc ? ' · Descuento −' + MXN(t.desc) : '') + ' · Envío ' + (t.envio ? MXN(t.envio) : 'gratis') + ' · Total ' + MXN(t.total) + (promoActiva() ? '\nCódigo: ' + CONFIG.promo.codigo : '') + '\nNombre:\nCiudad y C.P.:\nPago: transferencia / Mercado Pago';
+    return 'Hola PULIRA, quiero pedir:\n' + lineas.join('\n') + '\nSubtotal ' + MXN(t.sub) + (t.desc ? ' · Descuento −' + MXN(t.desc) : '') + ' · Envío ' + (t.envio ? MXN(t.envio) : 'gratis') + ' · Total ' + MXN(t.total) + (promoActiva() ? '\nCódigo: ' + CONFIG.promo.codigo : '') + '\nNombre:\nCiudad y C.P.:\nPago: transferencia / Mercado Pago';
   }
   function pedir() {
     if (!totales().n) return;
@@ -225,7 +225,7 @@
   }
   function comprarAhora(id) {
     var p = byId(id); if (!p) return;
-    var texto = 'Hola TERSA, quiero comprar ' + p.nombre + ' (' + p.codigo + ') — ' + MXN(p.precio) + '\nNombre:\nCiudad y C.P.:';
+    var texto = 'Hola PULIRA, quiero comprar ' + p.nombre + ' (' + p.codigo + ') — ' + MXN(p.precio) + '\nNombre:\nCiudad y C.P.:';
     window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(texto), '_blank');
   }
 
@@ -233,23 +233,23 @@
   (function () {
     var col = $('btn-colabora');
     if (col) {
-      var msg = encodeURIComponent('Hola TERSA, creo contenido de belleza y quiero colaborar. Mis redes: ');
+      var msg = encodeURIComponent('Hola PULIRA, creo contenido de belleza y quiero colaborar. Mis redes: ');
       if (CONFIG.whatsapp) { col.href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + msg; col.target = '_blank'; col.rel = 'noopener'; }
-      else if (CONFIG.correo) { col.href = 'mailto:' + CONFIG.correo + '?subject=' + encodeURIComponent('Colaboración TERSA') + '&body=' + msg; }
+      else if (CONFIG.correo) { col.href = 'mailto:' + CONFIG.correo + '?subject=' + encodeURIComponent('Colaboración PULIRA') + '&body=' + msg; }
       else { col.addEventListener('click', function (e) { e.preventDefault(); col.textContent = 'Canales oficiales próximamente'; }); }
     }
     if (CONFIG.promo && CONFIG.promo.activa) $('topbar').textContent = CONFIG.promo.texto + ' · Garantía 12 meses · Cambio en 30 días';
     var c = $('canales'), html = '';
-    if (CONFIG.whatsapp) { html += '<a href="https://wa.me/' + CONFIG.whatsapp + '" target="_blank" rel="noopener">WhatsApp</a>'; var w = $('wa-float'); w.href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent('Hola TERSA, tengo una duda sobre '); w.hidden = false; }
+    if (CONFIG.whatsapp) { html += '<a href="https://wa.me/' + CONFIG.whatsapp + '" target="_blank" rel="noopener">WhatsApp</a>'; var w = $('wa-float'); w.href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent('Hola PULIRA, tengo una duda sobre '); w.hidden = false; }
     if (CONFIG.instagram) html += '<a href="https://instagram.com/' + esc(CONFIG.instagram) + '" target="_blank" rel="noopener">Instagram</a>';
     if (CONFIG.correo) html += '<a href="mailto:' + esc(CONFIG.correo) + '">Correo</a>';
     c.innerHTML = html || '<span>Canales oficiales próximamente</span>';
     $('form-news').addEventListener('submit', function (e) {
       e.preventDefault();
       var mail = $('news-mail').value.trim(); if (!mail) return;
-      var lista = []; try { lista = JSON.parse(localStorage.getItem('tersa-news') || '[]'); } catch (err) {}
+      var lista = []; try { lista = JSON.parse(localStorage.getItem('pulira-news') || '[]'); } catch (err) {}
       if (lista.indexOf(mail) < 0) lista.push(mail);
-      try { localStorage.setItem('tersa-news', JSON.stringify(lista)); } catch (err) {}
+      try { localStorage.setItem('pulira-news', JSON.stringify(lista)); } catch (err) {}
       $('form-news').innerHTML = '<span class="ok">Listo. Te avisamos cuando entre algo nuevo.</span>';
     });
   })();

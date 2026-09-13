@@ -1,84 +1,68 @@
-/* TERSA · fotos disponibles por producto (principal, detalle, empaque). Lo escriben las herramientas de fotos; la tienda usa la foto solo si está aquí. */
+/* PULIRA · fotos disponibles por producto (principal, detalle, empaque). Lo escriben las herramientas de fotos; la tienda usa la foto solo si está aquí. */
 var FOTOS = {
   "cepillo-facial": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "cepillo-secador": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "espatula-ultrasonica": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "espejo-led": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "esponjas-x4": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "gua-sha-electrico": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "kit-cabello": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "kit-glow": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "kit-rutina": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "lampara-unas": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "limpiador-brochas": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "masajeador-cabelludo": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "mascara-led": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "microcorriente": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "removedor-puntos": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "vaporizador": [
     "principal",
-    "detalle",
-    "empaque"
+    "detalle"
   ],
   "hero": true,
   "coleccion": true

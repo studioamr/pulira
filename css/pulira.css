@@ -1,4 +1,4 @@
-/* TERSA · piel: porcelana + tinta + un acento (terracota). Sin neón, sin glow. */
+/* PULIRA · piel: porcelana + tinta + un acento (terracota). Sin neón, sin glow. */
 :root{--hueso:#F3F0EA;--papel:#FBFAF7;--tinta:#151311;--gris:#6E685F;--linea:#E1DBD1;--acento:#B9432B;--acento-2:#9A3622;--verde:#2F6B4F;--display:"Archivo",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -226,8 +226,8 @@ table.compara{width:100%;border-collapse:collapse;font-size:14px;background:var(
 table.compara th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gris);text-align:left;padding:14px 16px;border-bottom:1px solid var(--tinta);font-weight:500}
 table.compara td{padding:13px 16px;border-bottom:1px solid var(--linea);vertical-align:top;color:var(--gris)}
 table.compara td:first-child{color:var(--tinta);font-weight:600;white-space:nowrap}
-table.compara .tersa{background:#F7F4EE;color:var(--tinta);font-weight:500}
-table.compara th.tersa{color:var(--acento)}
+table.compara .pulira{background:#F7F4EE;color:var(--tinta);font-weight:500}
+table.compara th.pulira{color:var(--acento)}
 .garantia{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
 .news{background:var(--tinta);color:#EDE8DF;border-radius:8px;padding:34px 36px;display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center;margin:20px 0 10px}
 .news h2{font-family:var(--display);font-size:24px;line-height:1.15;margin-bottom:8px}

@@ -1,4 +1,4 @@
-/* TERSA · copy de ventas por producto. Se fusiona con el catálogo en la tienda (no toca los números del motor).
+/* PULIRA · copy de ventas por producto. Se fusiona con el catálogo en la tienda (no toca los números del motor).
    beneficio = promesa corta y medible · corto = 1–2 frases que venden · paraQuien = a quién le habla ·
    resultados = qué vas a notar y cuándo (honesto) · contra = por qué a este precio (con datos reales de Mercado Libre, sep-2026). */
 var COPY = {

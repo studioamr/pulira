@@ -1,4 +1,4 @@
-/* TERSA · catálogo público (generado por herramientas/build_publico.py; los datos internos viven en js/catalogo.js del proyecto). */
+/* PULIRA · catálogo público (generado por herramientas/build_publico.py; los datos internos viven en js/catalogo.js del proyecto). */
 var CATALOGO = [
  {
   "id": "esponjas-x4",
