@@ -45,7 +45,7 @@
   var FOTOS = (typeof window.FOTOS === 'object' && window.FOTOS) || {};
   function vistas(p) { var v = FOTOS[p.id]; return Array.isArray(v) ? v : (v ? ['principal'] : []); }
   function fotoSrc(p, vista) { return 'img/p/' + p.id + (vista === 'principal' ? '' : '-' + vista) + '.jpg'; }
-  var NOMBRE_VISTA = { principal: 'Producto', detalle: 'Detalle', empaque: 'Empaque' };
+  var NOMBRE_VISTA = { principal: 'Producto', detalle: 'Detalle', empaque: 'Más' };
   function tile(p, extra) {
     var vs = vistas(p);
     var src = p.img || (vs.length ? fotoSrc(p, 'principal') : '');

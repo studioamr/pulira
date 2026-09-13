@@ -3,29 +3,32 @@ var CATALOGO = [
  {
   "id": "esponjas-x4",
   "codigo": "TER·01",
-  "nombre": "Esponjas hidrófilas · set de 4 con estuche rígido",
-  "corto": "Cuatro esponjas que crecen con agua, en un estuche que las mantiene limpias y secas.",
+  "nombre": "Esponjas de maquillaje · pack de 14 con estuche",
+  "corto": "Catorce esponjas en tres tamaños que crecen con agua, en un estuche que las mantiene limpias. Para base, corrector y polvos.",
   "cat": "rostro",
   "glifo": "esponjas",
-  "precio": 279,
+  "precio": 149,
   "img": "",
   "hace": [
    "Crecen al mojarse y aplican base sin absorberla de más",
-   "Estuche rígido con ventilación: se secan sin hongos ni olor",
-   "Cuatro formas: gota, biselada, mini para ojos y plana"
+   "Tres tamaños: grande para base, mediana para corrector, mini para ojos y nariz",
+   "Estuche para guardarlas limpias y llevarlas de viaje"
   ],
   "noHace": [
-   "No sustituye una brocha para polvos",
+   "No sustituye una brocha para polvos sueltos",
    "No es de látex: si el látex te irrita, esta sí la puedes usar"
   ],
   "specs": {
+   "Marca": "HealthyMoov",
+   "Piezas": "14 esponjas + estuche",
+   "Tamaños": "Grande · mediana · mini",
    "Material": "Poliuretano hidrófilo, sin látex",
-   "Piezas": "4 esponjas + estuche",
+   "Color": "Violeta",
    "Vida útil": "3 meses por esponja con lavado semanal"
   },
   "caja": [
-   "4 esponjas",
-   "Estuche rígido ventilado",
+   "14 esponjas",
+   "Estuche",
    "Tarjeta de lavado"
   ]
  },
@@ -33,14 +36,14 @@ var CATALOGO = [
   "id": "mascara-led",
   "codigo": "TER·02",
   "nombre": "Máscara LED facial · 7 colores",
-  "corto": "Luz roja y azul de potencia real para la luminosidad y la textura de la piel. Diez minutos al día.",
+  "corto": "Luz roja y azul para la luminosidad y la textura de la piel. Diez minutos al día, con control de intensidad.",
   "cat": "rostro",
   "glifo": "mascara",
   "precio": 599,
   "img": "",
   "hace": [
-   "Rojo 630 nm y azul 415 nm con potencia medible, no LEDs de adorno",
-   "Sesiones de 10 minutos con apagado automático",
+   "Luz roja y azul con potencia real, más amarillo, verde, cian, morado y blanco",
+   "Sesiones de 10 minutos con control de intensidad y apagado automático",
    "Se usa sobre la piel limpia, sin producto encima"
   ],
   "noHace": [
@@ -48,22 +51,23 @@ var CATALOGO = [
    "No es un tratamiento médico: si tienes una condición de la piel, pregúntale a tu dermatólogo"
   ],
   "specs": {
-   "LEDs": "150 · rojo, azul, amarillo, verde, cian, morado, blanco",
-   "Energía": "Cargador USB-C 5 V",
-   "Sesión": "10 min con temporizador",
-   "Protección": "Gafas incluidas"
+   "LEDs": "86 · 7 colores",
+   "Potencia": "20 W",
+   "Energía": "Cable USB con control",
+   "Peso": "350 g",
+   "Medidas": "23 × 14 cm",
+   "Sesión": "10 min con temporizador"
   },
   "caja": [
    "Máscara",
-   "Control con cable",
-   "Gafas",
-   "Cable USB-C"
+   "Control con cable USB",
+   "Manual"
   ]
  },
  {
   "id": "microcorriente",
   "codigo": "TER·03",
-  "nombre": "Microcorriente facial · tonificación",
+  "nombre": "Microcorriente facial INSKIN · tonificación",
   "corto": "Corriente de microamperios que tonifica el rostro. Efecto lifting de horas, sin agujas.",
   "cat": "rostro",
   "glifo": "microcorriente",
@@ -71,38 +75,39 @@ var CATALOGO = [
   "img": "",
   "hace": [
    "Tonifica los músculos del rostro con microcorriente: pómulo y mandíbula más definidos por unas horas",
-   "Cinco intensidades; se siente un cosquilleo, no dolor",
-   "Con gel conductor incluido para que la corriente pase"
+   "Intensidad regulable; se siente un cosquilleo, no dolor",
+   "Recargable por USB, cabe en la bolsa"
   ],
   "noHace": [
    "El efecto es temporal: si dejas de usarlo, se va",
-   "No usar con marcapasos, embarazo o epilepsia"
+   "No usar con marcapasos, embarazo o epilepsia",
+   "No incluye gel conductor: úsalo con un sérum acuoso o gel de aloe"
   ],
   "specs": {
-   "Corriente": "Hasta 400 µA",
-   "Niveles": "5",
-   "Batería": "Recargable USB, ~30 sesiones",
-   "Gel": "Tubo de 50 ml incluido"
+   "Marca": "INSKIN",
+   "Tecnología": "Microcorriente",
+   "Batería": "Recargable USB",
+   "Piel": "Todo tipo de piel",
+   "Hipoalergénico": "Sí"
   },
   "caja": [
    "Dispositivo",
-   "Gel conductor 50 ml",
    "Cable USB",
-   "Guía de movimientos"
+   "Manual"
   ]
  },
  {
   "id": "espatula-ultrasonica",
   "codigo": "TER·04",
-  "nombre": "Espátula ultrasónica · limpieza profunda",
-  "corto": "Vibra a 24,000 Hz y saca del poro lo que el jabón no saca. Acero, agua y dos minutos.",
+  "nombre": "Espátula ultrasónica CIICII · limpieza profunda",
+  "corto": "Vibración ultrasónica que saca del poro lo que el jabón no saca. Pantalla LCD, cuatro modos, acero y agua.",
   "cat": "rostro",
   "glifo": "espatula",
   "precio": 349,
   "img": "",
   "hace": [
-   "Vibra a 24,000 Hz y desprende sebo y suciedad del poro con la piel mojada",
-   "Modo iones para que el sérum entre mejor",
+   "Vibración ultrasónica que desprende sebo y suciedad del poro con la piel mojada",
+   "Cuatro modos: limpieza, ion+, ion− y lifting, con pantalla LCD",
    "Hoja de acero inoxidable: se lava bajo el chorro"
   ],
   "noHace": [
@@ -110,57 +115,63 @@ var CATALOGO = [
    "No es un peeling químico ni lo sustituye"
   ],
   "specs": {
-   "Frecuencia": "24 kHz",
+   "Marca": "CIICII",
+   "Modelo": "C1599",
    "Modos": "Limpieza · Ion+ · Ion− · Lifting",
-   "Batería": "USB, ~90 min de uso",
-   "Hoja": "Acero inoxidable"
+   "Pantalla": "LCD",
+   "Batería": "600 mAh, carga USB",
+   "Hoja": "Acero inoxidable",
+   "Color": "Blanco"
   },
   "caja": [
    "Espátula",
    "Cable USB",
-   "Funda"
+   "Manual"
   ]
  },
  {
   "id": "cepillo-facial",
   "codigo": "TER·05",
-  "nombre": "Cepillo facial sónico de silicón",
-  "corto": "Silicón que no guarda bacterias, vibración sónica y un minuto por limpieza. Aguanta la regadera.",
+  "nombre": "Cepillo facial sónico de silicón Monbelle",
+  "corto": "Silicón que no guarda bacterias, vibración sónica en tres velocidades y un minuto por limpieza. Aguanta la regadera.",
   "cat": "rostro",
   "glifo": "cepillo",
-  "precio": 349,
+  "precio": 399,
   "img": "",
   "hace": [
-   "Silicón grado médico que no acumula bacterias como las cerdas",
-   "Vibración sónica en 5 niveles, un minuto por limpieza",
-   "Impermeable: se usa en la regadera"
+   "Silicón suave que no acumula bacterias como las cerdas",
+   "Vibración sónica en 3 velocidades, un minuto por limpieza",
+   "A prueba de agua: se usa en la regadera"
   ],
   "noHace": [
    "No exfolia: limpia",
    "No reemplaza el desmaquillante"
   ],
   "specs": {
-   "Material": "Silicón grado médico",
-   "Niveles": "5",
-   "Batería": "Carga USB, ~300 usos",
-   "Agua": "IPX7"
+   "Marca": "Monbelle",
+   "Material": "Silicón suave",
+   "Velocidades": "3",
+   "Batería": "Recargable",
+   "Agua": "A prueba de agua",
+   "Tamaño": "18 × 4 cm",
+   "Color": "Rosa"
   },
   "caja": [
    "Cepillo",
-   "Cable magnético USB"
+   "Cable de carga"
   ]
  },
  {
   "id": "removedor-puntos",
   "codigo": "TER·06",
-  "nombre": "Removedor de puntos negros por succión",
-  "corto": "Succión regulable con cuatro cabezales. Después del vapor, tres segundos por zona.",
+  "nombre": "Aspirador de puntos negros Fopnew · 6 cabezales",
+  "corto": "Succión regulable en cuatro niveles con seis cabezales y pantalla LCD. Después del vapor, tres segundos por zona.",
   "cat": "rostro",
   "glifo": "succion",
   "precio": 249,
   "img": "",
   "hace": [
-   "Succión regulable en 3 niveles con 4 cabezales",
+   "Succión regulable en 4 niveles con 6 cabezales y pantalla LCD",
    "Funciona después de abrir el poro con vapor o agua caliente",
    "Para nariz, barbilla y frente"
   ],
@@ -169,144 +180,157 @@ var CATALOGO = [
    "No pases la succión más de 3 segundos por zona"
   ],
   "specs": {
-   "Succión": "Hasta 60 kPa",
-   "Cabezales": "4",
-   "Batería": "USB, ~150 min",
-   "Filtros": "10 de repuesto"
+   "Marca": "Fopnew",
+   "Niveles": "4",
+   "Cabezales": "6",
+   "Pantalla": "LCD",
+   "Potencia": "5 W",
+   "Energía": "Recargable USB"
   },
   "caja": [
-   "Dispositivo",
-   "4 cabezales",
-   "Filtros",
-   "Cable USB"
+   "Aspirador",
+   "6 cabezales",
+   "Cable USB",
+   "Filtros de repuesto",
+   "Manual"
   ]
  },
  {
   "id": "vaporizador",
   "codigo": "TER·07",
-  "nombre": "Vaporizador facial nano-iónico",
-  "corto": "Vapor caliente en 30 segundos que abre el poro antes de limpiar. Se apaga solo al acabarse el agua.",
+  "nombre": "Vaporizador facial nano-iónico K.Skin KD33S",
+  "corto": "Vapor caliente en un minuto que abre el poro antes de limpiar. Tanque de 160 ml, tres niveles, 110 V.",
   "cat": "rostro",
   "glifo": "vapor",
   "precio": 749,
   "img": "",
   "hace": [
-   "Vapor caliente en 30 segundos para abrir el poro antes de la limpieza",
-   "Tanque de 50 ml: 8 a 10 minutos de vapor",
-   "Apagado automático sin agua"
+   "Vapor caliente nano-iónico en un minuto para abrir el poro antes de la limpieza",
+   "Tanque de 160 ml y tres niveles de vapor",
+   "Apagado automático sin agua; libre de BPA"
   ],
   "noHace": [
    "No hidrata por sí solo: prepara la piel",
    "No es humidificador de cuarto"
   ],
   "specs": {
-   "Potencia": "280 W · 120 V",
-   "Tanque": "50 ml",
-   "Tiempo": "8–10 min",
-   "Vapor": "Nano-iónico"
+   "Marca": "K.Skin",
+   "Modelo": "KD33S",
+   "Potencia": "200 W · 110–120 V",
+   "Tanque": "160 ml",
+   "Calienta": "En 1 minuto",
+   "Niveles": "3",
+   "Alto": "30 cm",
+   "Color": "Café"
   },
   "caja": [
    "Vaporizador",
-   "Vaso medidor"
+   "Vaso medidor",
+   "Manual"
   ]
  },
  {
   "id": "gua-sha-electrico",
   "codigo": "TER·08",
-  "nombre": "Gua Sha eléctrico · vibración y calor",
-  "corto": "La piedra de siempre, en acero, con calor a 42 °C y vibración para drenar el rostro.",
+  "nombre": "Gua Sha eléctrico G08 · calor infrarrojo y vibración",
+  "corto": "La forma del gua sha, inalámbrico, con calor infrarrojo y nueve velocidades para drenar rostro y cuerpo.",
   "cat": "rostro",
   "glifo": "guasha",
   "precio": 449,
   "img": "",
   "hace": [
-   "Calor a 42 °C y vibración para drenar y relajar el rostro",
-   "Forma de gua sha tradicional en acero; se usa con aceite",
-   "Cinco minutos por lado, apagado automático"
+   "Calor infrarrojo y vibración en nueve velocidades para drenar y relajar",
+   "Inalámbrico: se carga y se usa sin cable, con aceite o crema",
+   "Sirve para rostro, cuello, hombros y piernas"
   ],
   "noHace": [
    "No afila el mentón: desinflama",
    "No usar sobre bótox o rellenos recientes"
   ],
   "specs": {
-   "Temperatura": "42–45 °C",
-   "Vibración": "3 niveles",
-   "Batería": "USB, ~60 min",
-   "Material": "Acero inoxidable"
+   "Modelo": "G08",
+   "Calor": "Infrarrojo",
+   "Velocidades": "9",
+   "Batería": "Recargable, inalámbrico",
+   "Tamaño": "9.5 cm",
+   "Color": "Blanco"
   },
   "caja": [
-   "Gua Sha",
-   "Cable USB",
-   "Bolsa"
+   "Gua Sha eléctrico",
+   "Cable de carga",
+   "Manual"
   ]
  },
  {
   "id": "cepillo-secador",
   "codigo": "TER·10",
-  "nombre": "Cepillo secador de aire caliente 3 en 1",
-  "corto": "Seca y da forma en un solo paso, con aire frío para fijar. Sin plancha.",
+  "nombre": "Cepillo secador de aire caliente 3 en 1 · iónico",
+  "corto": "Seca, alisa y da forma en un solo paso, con iones para menos frizz y apagado automático. Sin plancha.",
   "cat": "cabello",
   "glifo": "secador",
   "precio": 599,
   "img": "",
   "hace": [
-   "Seca y da forma al mismo tiempo, sin plancha",
-   "Tres temperaturas y aire frío para fijar",
-   "Cerdas mixtas que no jalan"
+   "Seca, alisa y da forma al mismo tiempo, sin plancha",
+   "Generador de iones para menos frizz y brillo",
+   "Apagado automático y protección contra sobrecalentamiento"
   ],
   "noHace": [
    "No es un secador profesional de 2,000 W",
    "No alacia el cabello muy rizado como una plancha"
   ],
   "specs": {
-   "Potencia": "1,000 W",
-   "Voltaje": "110–120 V",
-   "Iones": "Generador de iones negativos",
-   "Cable": "1.8 m giratorio"
+   "Funciones": "Secar · alisar · rizar",
+   "Iones": "Sí, antiestático",
+   "Voltaje": "Universal 100–240 V",
+   "Seguridad": "Apagado automático",
+   "Color": "Negro"
   },
   "caja": [
    "Cepillo secador",
-   "Gancho"
+   "Manual"
   ]
  },
  {
   "id": "masajeador-cabelludo",
   "codigo": "TER·11",
-  "nombre": "Masajeador de cuero cabelludo impermeable",
-  "corto": "Cuatro cabezales que amasan en la regadera. Relaja y reparte el shampoo donde debe.",
+  "nombre": "Masajeador de cuero cabelludo eléctrico · portátil",
+  "corto": "Cabezales que amasan el cuero cabelludo con velocidad regulable. Relaja, activa la circulación y reparte el shampoo.",
   "cat": "cabello",
   "glifo": "cabelludo",
   "precio": 399,
   "img": "",
   "hace": [
-   "Cuatro cabezales que amasan el cuero cabelludo en la regadera",
-   "Estimula la circulación: relaja y ayuda a distribuir el shampoo",
-   "Impermeable IPX7, base de carga"
+   "Cabezales que amasan el cuero cabelludo con velocidad regulable",
+   "Estimula la circulación: relaja y ayuda a distribuir el shampoo o el tratamiento",
+   "Inalámbrico, carga por USB"
   ],
   "noHace": [
    "No hace crecer el pelo por sí solo",
-   "No sustituye el tratamiento de la caída"
+   "No sustituye el tratamiento de la caída",
+   "No lo sumerjas: úsalo con el cabello húmedo, no bajo el chorro"
   ],
   "specs": {
-   "Cabezales": "4 × 21 nodos",
-   "Batería": "USB, ~90 min",
-   "Agua": "IPX7",
-   "Modos": "2 velocidades"
+   "Cabezales": "Silicón, de amasado",
+   "Velocidad": "Regulable",
+   "Batería": "Recargable USB (5 V)",
+   "Uso": "Cabello húmedo o seco",
+   "Color": "Blanco"
   },
   "caja": [
    "Masajeador",
-   "Base de carga",
-   "Cable USB"
+   "Cable USB",
+   "Manual"
   ]
  },
  {
   "id": "lampara-unas",
   "codigo": "TER·12",
-  "nombre": "Lámpara UV/LED para uñas · 48 W",
-  "corto": "Cura gel en 30 a 60 segundos con sensor de mano y modo baja temperatura.",
+  "nombre": "Lámpara UV/LED para uñas SUN 5 · 48 W",
+  "corto": "Cura gel en 30 a 60 segundos con sensor de mano y cuatro temporizadores. Manos y pies.",
   "cat": "unas",
   "glifo": "lampara",
-  "precio": 399,
+  "precio": 349,
   "img": "",
   "hace": [
    "Cura gel en 30 a 60 segundos",
@@ -318,10 +342,13 @@ var CATALOGO = [
    "No es de salón: 48 W reales, no 180"
   ],
   "specs": {
-   "Potencia": "48 W · 24 LEDs",
+   "Marca": "SUN",
+   "Modelo": "SUN 5",
+   "Potencia": "48 W · LED UV",
    "Temporizador": "10 / 30 / 60 / 99 s",
-   "Energía": "Cable 120 V",
-   "Base": "Desmontable para pies"
+   "Energía": "Cable 127 V",
+   "Medidas": "25 × 20 × 8 cm",
+   "Uso": "Manos y pies"
   },
   "caja": [
    "Lámpara",
@@ -332,90 +359,95 @@ var CATALOGO = [
  {
   "id": "espejo-led",
   "codigo": "TER·13",
-  "nombre": "Espejo de maquillaje LED con aumento",
-  "corto": "Tres tonos de luz, aumento 10× para el detalle y se inclina. Con pilas o cable.",
+  "nombre": "Espejo de maquillaje tríptico LED · aumento 2×/3×/10×",
+  "corto": "Luz LED regulable al tacto, tres aumentos para el detalle y se pliega. Con pilas o cable.",
   "cat": "rostro",
   "glifo": "espejo",
-  "precio": 499,
+  "precio": 449,
   "img": "",
   "hace": [
-   "Tres tonos de luz: cálida, natural y fría, regulables al tacto",
-   "Aumento 10× en el espejo chico para el detalle",
-   "Se inclina; funciona con pilas o cable USB"
+   "Luz LED regulable al tacto para maquillarte con luz pareja",
+   "Aumento 2×, 3× y 10× en los paneles chicos para el detalle",
+   "Tríptico plegable; funciona con pilas o cable USB"
   ],
   "noHace": [
    "No tiene bluetooth ni bocina: es un espejo",
    "El 10× distorsiona: es para el detalle, no para maquillar todo el rostro"
   ],
   "specs": {
-   "Luz": "3 tonos, regulable",
-   "Aumento": "1× y 10×",
-   "Energía": "USB o 4 pilas AAA",
-   "Tamaño": "22 cm"
+   "Marca": "Utieer",
+   "Tipo": "Tríptico plegable",
+   "Luz": "LED táctil, regulable",
+   "Aumento": "1× · 2× · 3× · 10×",
+   "Energía": "Pilas AAA o cable USB",
+   "Marco": "Negro"
   },
   "caja": [
-   "Espejo",
-   "Cable USB"
+   "Espejo tríptico",
+   "Cable USB",
+   "Manual"
   ]
  },
  {
   "id": "limpiador-brochas",
   "codigo": "TER·14",
-  "nombre": "Limpiador eléctrico de brochas",
-  "corto": "Lava y seca brochas girando en 30 segundos. Ocho adaptadores, agua y jabón.",
+  "nombre": "Limpiador eléctrico de brochas · con secado",
+  "corto": "Lava y seca brochas girándolas en el tazón. Adaptadores de silicón para casi cualquier mango, agua y jabón neutro.",
   "cat": "rostro",
   "glifo": "brochas",
   "precio": 279,
   "img": "",
   "hace": [
-   "Lava y seca brochas en 30 segundos girándolas",
-   "Ocho adaptadores para distintos mangos",
-   "Tazón con agua y jabón neutro: sin químicos especiales"
+   "Lava y seca brochas girándolas en el tazón",
+   "Adaptadores de silicón para distintos grosores de mango",
+   "Agua y jabón neutro: sin químicos especiales"
   ],
   "noHace": [
    "No limpia esponjas",
    "No es para brochas de pelo natural muy delicado"
   ],
   "specs": {
-   "Adaptadores": "8",
-   "Energía": "2 pilas AAA",
+   "Función": "Lavado y secado por giro",
+   "Adaptadores": "Silicón, varios diámetros",
    "Tazón": "Incluido",
-   "Tiempo": "30 s lavado + 30 s secado"
+   "Energía": "Pilas AAA"
   },
   "caja": [
    "Motor",
-   "8 adaptadores",
+   "Adaptadores",
    "Tazón",
-   "Base"
+   "Base",
+   "Manual"
   ]
  },
  {
   "id": "kit-rutina",
   "codigo": "TER·K1",
   "nombre": "Kit Rutina · limpieza completa",
-  "corto": "Cepillo sónico, espátula ultrasónica y el set de esponjas. La limpieza entera, en una caja.",
+  "corto": "Cepillo sónico, espátula ultrasónica y el pack de esponjas. La limpieza entera, con envío gratis.",
   "cat": "kits",
   "glifo": "kit",
   "precio": 749,
   "img": "",
   "hace": [
    "Limpieza sónica diaria + limpieza profunda semanal + aplicación",
-   "Ahorra frente a comprar las tres piezas sueltas",
-   "Caja de regalo"
+   "Ahorra frente a comprar las tres piezas sueltas y el envío va gratis",
+   "Cada pieza llega en su empaque original, en paquetes separados"
   ],
   "noHace": [
-   "No incluye limpiador ni sérum"
+   "No incluye limpiador ni sérum",
+   "No viene en una sola caja de regalo"
   ],
   "specs": {
-   "Incluye": "Cepillo facial · Espátula ultrasónica · Esponjas ×4",
+   "Incluye": "Cepillo facial Monbelle · Espátula CIICII · Esponjas ×14",
    "Ahorro": "vs piezas sueltas",
-   "Caja": "Rígida, para regalo"
+   "Entrega": "Paquetes separados, 1 a 3 días hábiles"
   },
   "caja": [
    "Cepillo facial sónico",
    "Espátula ultrasónica",
-   "Set de esponjas",
-   "Guía de rutina"
+   "Pack de esponjas",
+   "Guía de rutina por correo"
   ],
   "componentes": [
    "cepillo-facial",
@@ -433,25 +465,24 @@ var CATALOGO = [
   "precio": 1199,
   "img": "",
   "hace": [
-   "Máscara LED 7 colores + microcorriente con gel",
+   "Máscara LED 7 colores + microcorriente INSKIN",
    "Rutina de 15 minutos, 4 veces por semana",
-   "Caja de regalo"
+   "Ahorra frente a las piezas sueltas y el envío va gratis"
   ],
   "noHace": [
    "No sustituye tratamientos dermatológicos",
-   "No usar la microcorriente con marcapasos o embarazo"
+   "No usar la microcorriente con marcapasos o embarazo",
+   "No viene en una sola caja: llega en dos paquetes"
   ],
   "specs": {
-   "Incluye": "Máscara LED · Microcorriente + gel",
+   "Incluye": "Máscara LED · Microcorriente INSKIN",
    "Ahorro": "vs piezas sueltas",
-   "Caja": "Rígida, para regalo"
+   "Entrega": "Paquetes separados, 1 a 3 días hábiles"
   },
   "caja": [
    "Máscara LED",
    "Microcorriente",
-   "Gel conductor",
-   "Gafas",
-   "Guía de rutina"
+   "Guía de rutina por correo"
   ],
   "componentes": [
    "mascara-led",
@@ -468,23 +499,23 @@ var CATALOGO = [
   "precio": 899,
   "img": "",
   "hace": [
-   "Masaje en la regadera + secado con forma",
-   "Ahorra frente a comprar las dos piezas sueltas",
-   "Caja de regalo"
+   "Masaje del cuero cabelludo + secado con forma",
+   "Ahorra frente a comprar las dos piezas sueltas y el envío va gratis",
+   "Cada pieza llega en su empaque original"
   ],
   "noHace": [
-   "No incluye productos de cabello"
+   "No incluye productos de cabello",
+   "No viene en una sola caja: llega en dos paquetes"
   ],
   "specs": {
    "Incluye": "Cepillo secador 3 en 1 · Masajeador de cuero cabelludo",
    "Ahorro": "vs piezas sueltas",
-   "Caja": "Rígida, para regalo"
+   "Entrega": "Paquetes separados, 3 a 6 días hábiles"
   },
   "caja": [
    "Cepillo secador",
    "Masajeador",
-   "Base de carga",
-   "Cable USB"
+   "Guía de rutina por correo"
   ],
   "componentes": [
    "cepillo-secador",
