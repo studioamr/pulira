@@ -31,7 +31,7 @@
     { id: 'edad', h: '¿Qué edad tienes?', sub: 'Cambia qué conviene priorizar.', ops: [[22, 'Menos de 25'], [29, '25 a 34'], [39, '35 a 44'], [50, '45 o más']] },
     { id: 'minutos', h: '¿Cuántos minutos al día sí le vas a dedicar?', sub: 'Sé honesta: un kit que no usas no sirve.', ops: [[5, '5 minutos', 'lo mínimo'], [10, '10 minutos', 'lo normal'], [15, '15 o más', 'me gusta el ritual']] },
     { id: 'presupuesto', h: '¿Cuánto quieres invertir hoy?', sub: 'Puedes cambiarlo al final. Envío gratis desde $999.', ops: [[500, 'Hasta $500'], [900, '$500 a $900'], [1500, '$900 a $1,500'], [0, 'Sin límite']] },
-    { id: 'condiciones', multi: true, exclusivo: 'ninguna', h: 'Salud: marca lo que aplique', sub: 'Con esto quitamos lo que no debes usar. Estas respuestas no se guardan con tu contacto.', ops: [['embarazo', 'Embarazo o lactancia'], ['marcapasos', 'Marcapasos o implante electrónico'], ['fotosensibilidad', 'Epilepsia o fotosensibilidad'], ['rosacea', 'Rosácea o cuperosis'], ['botox', 'Botox o rellenos hace menos de 2 semanas'], ['retinoides', 'Uso retinoides o ácidos fuertes'], ['dermatitis', 'Dermatitis en el cuero cabelludo'], ['ninguna', 'Ninguna']] },
+    { id: 'condiciones', multi: true, exclusivo: 'ninguna', h: 'Salud: marca lo que aplique', sub: 'Con esto quitamos lo que no debes usar. Estas respuestas no se guardan con tu contacto.', ops: [['embarazo', 'Embarazo o lactancia'], ['marcapasos', 'Marcapasos o implante electrónico'], ['fotosensibilidad', 'Epilepsia o fotosensibilidad'], ['rosacea', 'Rosácea o cuperosis'], ['botox', 'Botox o rellenos hace menos de 2 semanas'], ['retinoides', 'Uso retinoides o ácidos fuertes'], ['dermatitis', 'Dermatitis o piel lastimada (rostro o cuero cabelludo)'], ['ninguna', 'Ninguna']] },
     { id: 'yaTiene', multi: true, exclusivo: 'ninguno', h: '¿Ya usas algún aparato?', sub: 'Para no venderte lo que ya tienes.', ops: [['ninguno', 'Ninguno'], ['mascara-led', 'Máscara LED'], ['microcorriente', 'Microcorriente'], ['cepillo-facial', 'Cepillo facial'], ['espatula-ultrasonica', 'Espátula ultrasónica'], ['vaporizador', 'Vaporizador'], ['cepillo-secador', 'Cepillo secador'], ['lampara-unas', 'Lámpara de uñas'], ['otro', 'Otro']] },
     { id: 'foto', h: '¿Una foto para afinar?', sub: 'Opcional. Se analiza en tu teléfono y no se guarda ni se sube: mide brillo, rojez y textura, nada más.', ops: [['si', 'Sí, usar la cámara', '20 segundos'], ['no', 'No, saltar']] }
   ];
@@ -152,6 +152,7 @@
     }, 800);
   }
 
+  function entrega(ids) { return ids.some(function (id) { return /3 a 6/.test((CAT[id] && CAT[id].entrega) || ''); }) ? '3 a 6 días hábiles' : '1 a 3 días hábiles'; }   // Full = 1–3; AliExpress desde México = 3–6 (UNIT-ECONOMICS §6)
   function nombre(id) { var p = CAT[id]; return p ? p.nombre.split(' · ')[0] : (DIAG.P[id] ? DIAG.P[id].nombre : id); }
   function beneficio(id) { var c = COPY[id]; return c && c.beneficio ? c.beneficio : (CAT[id] && CAT[id].hace ? CAT[id].hace[0] : ''); }
   function precio(id) { return CAT[id] ? CAT[id].precio : (DIAG.P[id] ? DIAG.P[id].precio : 0); }
@@ -201,7 +202,7 @@
     }
 
     var titulo = DIAG.KITS[k.id] ? k.nombre : (aparatos.length > 1 ? 'Tu kit: ' + aparatos.map(nombre).join(' + ') : nombre(aparatos[0]));
-    html += '<h1>' + esc(titulo) + '</h1><p class="sub">' + aparatos.length + (aparatos.length === 1 ? ' aparato' : ' aparatos') + (k.complemento ? ' y un complemento' : '') + ' · ' + k.minutosDia + ' min al día en promedio · llega en 1 a 6 días hábiles' + (k.skus.length > 1 ? ' (hasta ' + k.skus.length + ' paquetes, sin costo extra)' : '') + '.</p>';
+    html += '<h1>' + esc(titulo) + '</h1><p class="sub">' + aparatos.length + (aparatos.length === 1 ? ' aparato' : ' aparatos') + (k.complemento ? ' y un complemento' : '') + ' · ' + k.minutosDia + ' min al día en promedio · llega en ' + entrega(k.skus) + (k.skus.length > 1 ? ' (hasta ' + k.skus.length + ' paquetes, sin costo extra)' : '') + '.</p>';
     html += '<div class="res-kit">' + k.skus.map(function (id) { return tarjeta(id); }).join('') + extras.map(function (id) { return tarjeta(id, 'Agregado por ti', true); }).join('') + '</div>';
     html += plan(res);
     html += '<div class="explica" id="explica"><b>Por qué este kit</b>' + esc(textoLocal(res, aparatos)) + '</div>';

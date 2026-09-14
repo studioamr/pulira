@@ -37,7 +37,7 @@ var CATALOGO = [
   "id": "mascara-led",
   "codigo": "TER·02",
   "nombre": "Máscara LED facial · 7 colores",
-  "corto": "Luz roja y azul para la luminosidad y la textura de la piel. Diez minutos al día, con control de intensidad.",
+  "corto": "Luz roja y azul para la luminosidad de la piel. Diez minutos al día, con control de intensidad.",
   "cat": "rostro",
   "glifo": "mascara",
   "precio": 599,
@@ -53,7 +53,6 @@ var CATALOGO = [
   ],
   "specs": {
    "LEDs": "86 · 7 colores",
-   "Potencia": "20 W",
    "Energía": "Cable USB con control",
    "Peso": "350 g",
    "Medidas": "23 × 14 cm",
@@ -119,7 +118,6 @@ var CATALOGO = [
   ],
   "specs": {
    "Marca": "CIICII",
-   "Modelo": "C1599",
    "Modos": "Limpieza · Ion+ · Ion− · Lifting",
    "Pantalla": "LCD",
    "Batería": "600 mAh, carga USB",
@@ -357,7 +355,7 @@ var CATALOGO = [
    "Potencia": "48 W · LED UV",
    "Temporizador": "10 / 30 / 60 / 99 s",
    "Energía": "Cable 127 V",
-   "Medidas": "25 × 20 × 8 cm",
+   "Medidas": "22 × 19.5 × 10.4 cm",
    "Uso": "Manos y pies"
   },
   "caja": [

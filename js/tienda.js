@@ -159,14 +159,26 @@
 
   /* ---- bolsa ---- */
   function guarda() { try { localStorage.setItem('pulira-bolsa', JSON.stringify(bolsa)); localStorage.setItem('pulira-promo', JSON.stringify(promo)); } catch (e) {} }
-  function aparatosEnBolsa() { var n = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) n += p.componentes.length; else if (['esponjas-x4', 'limpiador-brochas', 'espejo-led'].indexOf(id) < 0) n += bolsa[id]; }); return n; }
+  var COMPLEMENTOS = ['esponjas-x4', 'limpiador-brochas', 'espejo-led'];
+  function aparatosIds() { var ids = []; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) p.componentes.forEach(function (c) { if (COMPLEMENTOS.indexOf(c) < 0 && ids.indexOf(c) < 0) ids.push(c); }); else if (COMPLEMENTOS.indexOf(id) < 0 && ids.indexOf(id) < 0) ids.push(id); }); return ids; }
+  function aparatosEnBolsa() { var n = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) n += p.componentes.length; else if (COMPLEMENTOS.indexOf(id) < 0) n += bolsa[id]; }); return n; }
+  function topeRutina(ap) {  // % máximo del código RUTINA para lo que hay en la bolsa: tabla por combinación (js/descuentos.js) o, si no existe la combinación, por cantidad
+    var ids = aparatosIds(), t = (window.DESCUENTOS_MAX || {})[ids.slice().sort().join('+')];
+    if (typeof t === 'number') return Math.min(t, ap >= 3 ? 12 : 8);
+    return ap >= 3 ? 12 : (ap >= 2 ? 8 : 0);
+  }
   function premioGuardado() { try { var p = JSON.parse(localStorage.getItem('pulira-premio') || 'null'); return p && p.codigo && (!p.vence || p.vence > Date.now()) ? p : null; } catch (e) { return null; } }
   function subtotalBruto() { var sub = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (p) sub += p.precio * bolsa[id]; }); return sub; }
   function evalCodigo(c, sub, ap) {  // → { codigo, desc ($), envioGratis, regalo, texto, pendiente } o null si el código no existe
     c = String(c || '').toUpperCase(); if (!c) return null;
     if (CONFIG.promo && CONFIG.promo.activa && c === String(CONFIG.promo.codigo).toUpperCase()) return { codigo: c, desc: Math.round(sub * (CONFIG.promo.descuento || 0)), envioGratis: !!CONFIG.promo.envioGratis, texto: CONFIG.promo.texto };
     var m = /^RUTINA(\d{1,2})$/.exec(c);   // kit personalizado de rutina.html: 2 aparatos hasta 8 %, 3 hasta 12 %
-    if (m) { var pct = +m[1], tope = ap >= 3 ? 12 : (ap >= 2 ? 8 : 0); return pct >= 1 && pct <= 12 ? (pct <= tope ? { codigo: c, desc: Math.round(sub * pct / 100), texto: 'Kit de tu rutina: ' + pct + '% de descuento' } : { codigo: c, desc: 0, texto: 'Kit de tu rutina: ' + pct + '% de descuento', pendiente: 'Aplica con ' + (pct > 8 ? '3' : '2') + ' aparatos en la bolsa.' }) : null; }
+    if (m) {
+      var pct = +m[1]; if (pct < 1 || pct > 12) return null;
+      var tope = topeRutina(ap), ef = Math.min(pct, tope);
+      if (ef <= 0) return { codigo: c, desc: 0, texto: 'Kit de tu rutina: ' + pct + '% de descuento', pendiente: ap >= 2 ? 'Esta combinación no admite descuento; vuelve a armar tu rutina.' : 'Aplica con 2 aparatos o más en la bolsa.' };
+      return { codigo: c, desc: Math.round(sub * ef / 100), texto: 'Kit de tu rutina: ' + ef + '% de descuento' + (ef < pct ? ' (ajustado a esta combinación)' : '') };
+    }
     var pr = (window.PREMIOS || {})[c];   // premios de la ruleta (js/dinamicas.js)
     if (!pr) return null;
     var regalo = pr.regalo && byId(pr.regalo), mitad = pr.mitad && byId(pr.mitad);
