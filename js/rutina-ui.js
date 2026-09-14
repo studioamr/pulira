@@ -11,8 +11,8 @@
   var DIAG = window.DIAG;
   var CAT = {}; (window.CATALOGO || []).forEach(function (p) { CAT[p.id] = p; });
   var COPY = window.COPY || {}, FOTOS = window.FOTOS || {};
-  var app = $('app');
-  if (!app || !DIAG) return;
+  var app = null;   // contenedor: #app de rutina.html, o el pop-up que abre js/dinamicas.js en el inicio (RUTINA.abrir)
+  if (!DIAG) return;
   var EMBED = /[?&]embed=1/.test(location.search);   // incrustada en la tienda (iframe): sin header/footer, y "Armar mi kit" enlaza a las fichas de la tienda
   var TIENDAS = { amboras: 'https://my-store-0ws91dzq.amboras.com/products/' };
   var mt = /[?&]tienda=(\w+)/.exec(location.search); if (mt && TIENDAS[mt[1]]) CFG.amboras = TIENDAS[mt[1]];
@@ -55,7 +55,7 @@
   /* ---- render ---- */
   function render(sinScroll) {
     guardar();
-    if (!sinScroll) window.scrollTo(0, 0);
+    if (!sinScroll) { var caja = app.closest && app.closest('.pop-box'); if (caja) caja.scrollTop = 0; else window.scrollTo(0, 0); }
     if (S.vista === 'paso') return paso();
     if (S.vista === 'camara') return camara();
     if (S.vista === 'calculando') return calculando();
@@ -66,10 +66,11 @@
   function inicio() {
     if (!$('empezar')) app.innerHTML = '<section class="rut-inicio"><p class="eyebrow">Sin registro · 60 segundos</p><h1>Tu rutina en 60 segundos.</h1>' +
       '<p class="lead">Ocho preguntas y te decimos qué aparatos sí valen la pena para ti, cuántos minutos al día y cuánto cuesta el kit. El resultado se ve sin dejar tu correo.</p>' +
-      '<div class="cta"><button class="btn acento" type="button" id="empezar">Empezar</button><a class="btn linea" href="index.html#catalogo">Ver catálogo</a></div>' +
+      '<div class="cta"><button class="btn acento" type="button" id="empezar">Empezar</button><a class="btn linea" href="index.html#catalogo" data-catalogo>Ver catálogo</a></div>' +
       '<div class="promesa"><span>Garantía 12 meses</span><span>Cambio en 30 días</span><span>Stock en México</span></div>' +
       '<p class="rut-nota">No es una valoración médica: es una guía para elegir bien. Si tienes una condición de piel, consúltalo con tu dermatóloga antes de usar cualquier aparato.</p></section>';
     $('empezar').onclick = function () { S = nuevo(); S.vista = 'paso'; S.paso = 0; EV.emit('diag_start', { event_id: S.event_id }); render(); };
+    enlazaCatalogo();
   }
 
   function paso() {
@@ -197,7 +198,7 @@
       var seguros = ['esponjas-x4', 'espejo-led', 'limpiador-brochas'].filter(function (id) { return !res.excluidos[id] && (r.yaTiene || []).indexOf(id) < 0; });
       html += '<h1>Para tu caso, primero una valoración dermatológica.</h1><p class="sub">Con lo que marcaste no hay aparato que te recomendemos sin que lo vea un especialista. Lo que sí puedes usar hoy:</p>' +
         '<div class="res-kit">' + seguros.map(function (id) { return tarjeta(id, 'Sin contraindicación'); }).join('') + '</div>' +
-        '<div class="res-cta"><button class="btn acento" type="button" id="armar" data-ids="' + seguros.join(',') + '">Agregar a la bolsa</button><a class="btn linea" href="index.html#catalogo">Ver catálogo</a></div>';
+        '<div class="res-cta"><button class="btn acento" type="button" id="armar" data-ids="' + seguros.join(',') + '">Agregar a la bolsa</button><a class="btn linea" href="index.html#catalogo" data-catalogo>Ver catálogo</a></div>';
       html += legal(res, excl); app.innerHTML = html; enlaza(res, seguros); return;
     }
 
@@ -234,8 +235,11 @@
       '<p class="legal">PULIRA vende aparatos de belleza para usar en casa. Esta guía no sustituye la valoración de un dermatólogo: si tienes una condición de piel, consúltalo antes de usar cualquier aparato. Precios en pesos con IVA; el envío se calcula en la bolsa. Los resultados dependen del uso constante y varían de persona a persona.</p>';
   }
 
+  function enModal() { return !!(app && app.closest && app.closest('.pop')); }
+  function enlazaCatalogo() { var c = app.querySelector('[data-catalogo]'); if (c && enModal()) c.onclick = function (e) { e.preventDefault(); cerrar(); location.hash = '#catalogo'; }; }
   function enlaza(res, ids) {
     var k = res.kit;
+    enlazaCatalogo();
     if ($('denuevo')) $('denuevo').onclick = function () { S = nuevo(); render(); };
     Array.prototype.forEach.call(app.querySelectorAll('[data-suma]'), function (b) { b.onclick = function () { S.extras = (S.extras || []).concat([b.dataset.suma]); render(true); }; });
     Array.prototype.forEach.call(app.querySelectorAll('[data-quita]'), function (b) { b.onclick = function () { S.extras = (S.extras || []).filter(function (x) { return x !== b.dataset.quita; }); render(true); }; });
@@ -258,6 +262,7 @@
         localStorage.setItem('pulira-eid', S.event_id);
       } catch (e) {}
       EV.emit('kit_cta_click', { destino: 'bolsa', kit_id: k.id, precio: k.precio, event_id: S.event_id });
+      if (window.TIENDA) { TIENDA.recargar(); cerrar(); TIENDA.abrir(); return; }   // misma página (pop-up en el inicio): la bolsa se abre ahí mismo
       location.href = 'index.html?abrir=bolsa#catalogo';
     };
     if ($('guardar-btn')) $('guardar-btn').onclick = function () { $('guardar').hidden = false; $('contacto').focus(); $('guardar-btn').hidden = true; };
@@ -288,5 +293,8 @@
       .then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.texto && $('explica')) $('explica').innerHTML = '<b>Por qué este kit</b>' + esc(j.texto); }).catch(function () {});
   }
 
-  render(true);
+  function abrir(el) { app = el; S = leer() || nuevo(); render(true); }
+  function cerrar() { if (enModal() && window.DINAMICAS) DINAMICAS.cerrar(); }
+  window.RUTINA = { abrir: abrir, cerrar: cerrar, reiniciar: function () { S = nuevo(); if (app) render(true); } };
+  var inicial = $('app'); if (inicial) abrir(inicial);   // rutina.html (y modo incrustado para Amboras)
 })();

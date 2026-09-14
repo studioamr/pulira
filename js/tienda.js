@@ -159,6 +159,7 @@
 
   /* ---- bolsa ---- */
   function guarda() { try { localStorage.setItem('pulira-bolsa', JSON.stringify(bolsa)); localStorage.setItem('pulira-promo', JSON.stringify(promo)); } catch (e) {} }
+  function recargar() { try { bolsa = JSON.parse(localStorage.getItem('pulira-bolsa') || '{}'); promo = JSON.parse(localStorage.getItem('pulira-promo') || '{}'); } catch (e) {} pintaBolsa(); }
   var COMPLEMENTOS = ['esponjas-x4', 'limpiador-brochas', 'espejo-led'];
   function aparatosIds() { var ids = []; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) p.componentes.forEach(function (c) { if (COMPLEMENTOS.indexOf(c) < 0 && ids.indexOf(c) < 0) ids.push(c); }); else if (COMPLEMENTOS.indexOf(id) < 0 && ids.indexOf(id) < 0) ids.push(id); }); return ids; }
   function aparatosEnBolsa() { var n = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) n += p.componentes.length; else if (COMPLEMENTOS.indexOf(id) < 0) n += bolsa[id]; }); return n; }
@@ -338,6 +339,7 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { cierraFicha(); cierraBolsa(); } });
 
   pintaPicks(); pintaKits(); pintaChips(); pintaGrid(); pintaBolsa();
+  window.TIENDA = { agrega: agrega, abrir: abreBolsa, recargar: recargar, codigo: function (c) { promo.codigo = String(c || '').toUpperCase(); guarda(); pintaBolsa(); } };   // API para rutina-ui.js y dinamicas.js en la misma página
   var mc = /[?&]codigo=([A-Za-z0-9]{2,20})/.exec(location.search);   // ?codigo=GIRO5 desde un pop-up o la tienda
   if (mc) { promo.codigo = mc[1].toUpperCase(); guarda(); pintaBolsa(); }
   if (/[?&]abrir=bolsa/.test(location.search)) abreBolsa();  // rutina.html manda aquí con el kit ya en la bolsa

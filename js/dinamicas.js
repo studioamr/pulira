@@ -48,15 +48,22 @@
     document.addEventListener('keydown', escHandler);
     Array.prototype.forEach.call(pop.querySelectorAll('[data-copia]'), function (b) { b.onclick = function () { copiar(b.dataset.copia, b); }; });
     Array.prototype.forEach.call(pop.querySelectorAll('[data-cerrar]'), function (b) { b.onclick = function (e) { e.preventDefault(); cierraPop(); }; });
+    Array.prototype.forEach.call(pop.querySelectorAll('[data-rutina]'), function (b) { b.onclick = irARutina; });
     EV.emit('popup_view', { tipo: tipo });
     var f = pop.querySelector('.btn'); if (f) f.focus();
     return pop;
   }
   function cierraPop() { if (pop) { pop.remove(); pop = null; } document.removeEventListener('keydown', escHandler); }
-  function irARutina() { cierraPop(); if (esRutina) { var b = $('empezar'); if (b) b.click(); } else location.href = 'rutina.html'; }
+  function irARutina() { cierraPop(); if (esRutina) { var b = $('empezar'); if (b) b.click(); } else abrirRutina(); }
+  function abrirRutina() {   // la rutina se arma AQUÍ MISMO, en un pop-up sobre el inicio (rutina.html queda como página independiente y como iframe para Amboras)
+    if (!window.RUTINA) { location.href = 'rutina.html'; return; }
+    var p = abrePop('<div id="app" class="rut" aria-live="polite"></div>', 'pop-rutina');
+    p.setAttribute('aria-label', 'Tu rutina en 60 segundos');
+    RUTINA.abrir(p.querySelector('#app'));
+  }
   function chip(codigo) { return '<div class="codigo-chip"><span>' + esc(codigo) + '</span><button type="button" data-copia="' + esc(codigo) + '">Copiar</button></div>'; }
   function botonesSalida(primario) {
-    return '<div class="pop-acc">' + primario + (esRutina ? '<button class="btn linea" type="button" data-rutina>Armar mi rutina</button>' : '<a class="btn linea" href="rutina.html">Armar mi rutina</a>') + '<a class="link" href="#" data-cerrar>Ahora no</a></div>';
+    return '<div class="pop-acc">' + primario + '<button class="btn linea" type="button" data-rutina>Armar mi rutina</button><a class="link" href="#" data-cerrar>Ahora no</a></div>';
   }
 
   /* ---- bienvenida ---- */
@@ -114,7 +121,7 @@
     var d = PREMIOS[pr.codigo];
     var html = '<p class="eyebrow">' + (nuevo ? 'Te tocó' : 'Tu premio') + '</p><h2>' + esc(d.texto) + '.</h2>' +
       '<p>' + esc(cap(d.cond)) + '. Vence el ' + esc(venceTexto(pr)) + '. Se aplica en la bolsa; si tienes otro código, usamos el que más te convenga.</p>' + chip(pr.codigo) +
-      '<div class="pop-acc">' + (esRutina ? '<button class="btn acento" type="button" data-rutina>Armar mi rutina</button>' : '<a class="btn acento" href="rutina.html">Armar mi rutina</a><button class="btn linea" type="button" data-bolsa>Ir a la bolsa</button>') + '<a class="link" href="#" data-cerrar>Cerrar</a></div>';
+      '<div class="pop-acc"><button class="btn acento" type="button" data-rutina>Armar mi rutina</button>' + (esRutina ? '' : '<button class="btn linea" type="button" data-bolsa>Ir a la bolsa</button>') + '<a class="link" href="#" data-cerrar>Cerrar</a></div>';
     var p = abrePop(html, 'pop-premio');
     if (p.querySelector('[data-rutina]')) p.querySelector('[data-rutina]').onclick = irARutina;
     if (p.querySelector('[data-bolsa]')) p.querySelector('[data-bolsa]').onclick = function () { cierraPop(); var b = $('btn-bolsa'); if (b) b.click(); };
@@ -197,10 +204,15 @@
   function init() {
     if (!C.activas || EMBED) return;   // incrustada en la tienda, la tienda pone sus propios pop-ups
     barra();
+    if (!esRutina) {   // en el inicio: los enlaces a rutina.html abren el pop-up, y #rutina / #diagnostico lo abren al cargar (anuncios)
+      document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href$="rutina.html"], a[href="#rutina"]'); if (a && window.RUTINA) { e.preventDefault(); abrirRutina(); } });
+      if (/^#(diagnostico|rutina)$/.test(location.hash)) { ses('pulira-pop-bienvenida', '1'); setTimeout(abrirRutina, 300); }
+      window.addEventListener('hashchange', function () { if (/^#(diagnostico|rutina)$/.test(location.hash)) abrirRutina(); else if (location.hash === '#ruleta') ruleta(); });
+    }
     if (location.hash === '#ruleta') { ses('pulira-pop-bienvenida', '1'); setTimeout(ruleta, 300); }
     else { var d = leerDiag(); if (!esRutina || !d || d.vista === 'inicio') { setTimeout(bienvenida, C.retrasoMs); if (C.alScroll) window.addEventListener('scroll', function h() { if (window.scrollY > 240) { window.removeEventListener('scroll', h); bienvenida(); } }, { passive: true }); } }
     salida();
   }
-  window.DINAMICAS = { abrirRuleta: ruleta, premio: premio, resumenPremio: resumenPremio, toast: toast, confeti: confeti, cerrar: cierraPop };
+  window.DINAMICAS = { abrirRuleta: ruleta, abrirRutina: abrirRutina, premio: premio, resumenPremio: resumenPremio, toast: toast, confeti: confeti, cerrar: cierraPop };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
