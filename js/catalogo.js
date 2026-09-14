@@ -30,7 +30,8 @@ var CATALOGO = [
    "14 esponjas",
    "Estuche",
    "Tarjeta de lavado"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "mascara-led",
@@ -62,7 +63,8 @@ var CATALOGO = [
    "Máscara",
    "Control con cable USB",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "microcorriente",
@@ -94,7 +96,8 @@ var CATALOGO = [
    "Dispositivo",
    "Cable USB",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "espatula-ultrasonica",
@@ -127,7 +130,8 @@ var CATALOGO = [
    "Espátula",
    "Cable USB",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "cepillo-facial",
@@ -159,7 +163,8 @@ var CATALOGO = [
   "caja": [
    "Cepillo",
    "Cable de carga"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "removedor-puntos",
@@ -193,7 +198,8 @@ var CATALOGO = [
    "Cable USB",
    "Filtros de repuesto",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "vaporizador",
@@ -227,7 +233,8 @@ var CATALOGO = [
    "Vaporizador",
    "Vaso medidor",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "gua-sha-electrico",
@@ -259,7 +266,8 @@ var CATALOGO = [
    "Gua Sha eléctrico",
    "Cable de carga",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "cepillo-secador",
@@ -289,7 +297,8 @@ var CATALOGO = [
   "caja": [
    "Cepillo secador",
    "Manual"
-  ]
+  ],
+  "entrega": "3 a 6 días hábiles"
  },
  {
   "id": "masajeador-cabelludo",
@@ -321,7 +330,8 @@ var CATALOGO = [
    "Masajeador",
    "Cable USB",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "lampara-unas",
@@ -339,7 +349,7 @@ var CATALOGO = [
   ],
   "noHace": [
    "No sirve para esmalte normal: necesita gel",
-   "No es de salón: 48 W reales, no 180"
+   "No es de salón: 48 W nominales (24 a 28 W de consumo real), no 180"
   ],
   "specs": {
    "Marca": "SUN",
@@ -354,7 +364,8 @@ var CATALOGO = [
    "Lámpara",
    "Cable",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "espejo-led",
@@ -386,7 +397,8 @@ var CATALOGO = [
    "Espejo tríptico",
    "Cable USB",
    "Manual"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles"
  },
  {
   "id": "limpiador-brochas",
@@ -418,7 +430,8 @@ var CATALOGO = [
    "Tazón",
    "Base",
    "Manual"
-  ]
+  ],
+  "entrega": "3 a 6 días hábiles"
  },
  {
   "id": "kit-rutina",
@@ -453,7 +466,8 @@ var CATALOGO = [
    "cepillo-facial",
    "espatula-ultrasonica",
    "esponjas-x4"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles, en paquetes separados"
  },
  {
   "id": "kit-glow",
@@ -487,7 +501,8 @@ var CATALOGO = [
   "componentes": [
    "mascara-led",
    "microcorriente"
-  ]
+  ],
+  "entrega": "1 a 3 días hábiles, en paquetes separados"
  },
  {
   "id": "kit-cabello",
@@ -520,6 +535,7 @@ var CATALOGO = [
   "componentes": [
    "cepillo-secador",
    "masajeador-cabelludo"
-  ]
+  ],
+  "entrega": "3 a 6 días hábiles, en paquetes separados"
  }
 ];

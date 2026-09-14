@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://studioamr.github.io/pulira/sitemap.xml

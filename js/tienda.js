@@ -41,23 +41,25 @@
 
   /* ---- imágenes: foto si existe, glifo si no ---- */
   function svg(glifo) { return '<svg viewBox="0 0 120 120" aria-hidden="true">' + (GLIFOS[glifo] || GLIFOS.kit) + '</svg>'; }
-  window.PULIRA_glifo = function (img) { var g = img.getAttribute('data-glifo'); var span = document.createElement('span'); span.innerHTML = svg(g); img.replaceWith(span.firstChild); };
+  window.PULIRA_glifo = function (img) { var g = img.getAttribute('data-glifo'); var span = document.createElement('span'); span.innerHTML = svg(g); (img.closest('picture') || img).replaceWith(span.firstChild); };
   var FOTOS = (typeof window.FOTOS === 'object' && window.FOTOS) || {};
   function vistas(p) { var v = FOTOS[p.id]; return Array.isArray(v) ? v : (v ? ['principal'] : []); }
   function fotoSrc(p, vista) { return 'img/p/' + p.id + (vista === 'principal' ? '' : '-' + vista) + '.jpg'; }
   var NOMBRE_VISTA = { principal: 'Producto', frente: 'Frente', detalle: 'Detalle', contexto: 'En uso', empaque: 'Caja' };
+  function thumb(p, vista, ext) { return 'img/t/' + p.id + (vista === 'principal' ? '' : '-' + vista) + '.' + ext; }  // miniaturas 640 px (herramientas/optimiza_img.py)
   function tile(p, extra) {
     var vs = vistas(p);
-    var src = p.img || (vs.length ? fotoSrc(p, 'principal') : '');
-    var alt = vs.indexOf('detalle') >= 0 ? '<img loading="lazy" class="alt" src="' + fotoSrc(p, 'detalle') + '" alt="">' : '';
+    var src = p.img || (vs.length ? thumb(p, 'principal', 'jpg') : '');
+    var alt = vs.indexOf('detalle') >= 0 ? '<img loading="lazy" class="alt" src="' + thumb(p, 'detalle', 'jpg') + '" alt="">' : '';
+    var img = '<img loading="lazy" width="640" height="640" src="' + esc(src) + '" alt="' + esc(p.nombre) + '" data-glifo="' + esc(p.glifo) + '" onerror="PULIRA_glifo(this)">';
     return '<div class="tile" data-ver="' + p.id + '"><span class="cod mono">' + esc(p.codigo) + '</span>' + (extra || '') +
-      (src ? '<img loading="lazy" src="' + esc(src) + '" alt="' + esc(p.nombre) + '" data-glifo="' + esc(p.glifo) + '" onerror="PULIRA_glifo(this)">' + alt : svg(p.glifo)) + '</div>';
+      (src ? (p.img ? img : '<picture><source type="image/webp" srcset="' + thumb(p, 'principal', 'webp') + '">' + img + '</picture>') + alt : svg(p.glifo)) + '</div>';
   }
   function galeria(p) {
     var vs = vistas(p);
     if (vs.length < 2) return tile(p).replace('data-ver="' + p.id + '"', '');
     return '<div class="galeria"><div class="tile grande"><span class="cod mono">' + esc(p.codigo) + '</span><img id="galeria-img" src="' + fotoSrc(p, vs[0]) + '" alt="' + esc(p.nombre) + '"></div>' +
-      '<div class="thumbs">' + vs.map(function (v, i) { return '<button class="thumb' + (i === 0 ? ' on' : '') + '" data-vista="' + v + '" data-pid="' + p.id + '" aria-label="' + NOMBRE_VISTA[v] + '"><img src="' + fotoSrc(p, v) + '" alt=""><span>' + NOMBRE_VISTA[v] + '</span></button>'; }).join('') + '</div></div>';
+      '<div class="thumbs">' + vs.map(function (v, i) { return '<button class="thumb' + (i === 0 ? ' on' : '') + '" data-vista="' + v + '" data-pid="' + p.id + '" aria-label="' + NOMBRE_VISTA[v] + '"><img loading="lazy" src="' + thumb(p, v, 'jpg') + '" alt=""><span>' + NOMBRE_VISTA[v] + '</span></button>'; }).join('') + '</div></div>';
   }
   function badge(p) {
     if (p.componentes) return '<span class="badge-kit gratis">Envío gratis · ahorras ' + MXN(ahorro(p)) + '</span>';
@@ -157,12 +159,21 @@
 
   /* ---- bolsa ---- */
   function guarda() { try { localStorage.setItem('pulira-bolsa', JSON.stringify(bolsa)); localStorage.setItem('pulira-promo', JSON.stringify(promo)); } catch (e) {} }
-  function promoActiva() { return !!(CONFIG.promo && CONFIG.promo.activa && promo.codigo && promo.codigo.toUpperCase() === String(CONFIG.promo.codigo).toUpperCase()); }
+  function aparatosEnBolsa() { var n = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) n += p.componentes.length; else if (['esponjas-x4', 'limpiador-brochas', 'espejo-led'].indexOf(id) < 0) n += bolsa[id]; }); return n; }
+  function promoDef() {  // promo de lanzamiento (CONFIG.promo) o código RUTINAn del kit personalizado de rutina.html (2 aparatos hasta 8 %, 3 hasta 12 %)
+    var c = String(promo.codigo || '').toUpperCase(); if (!c) return null;
+    if (CONFIG.promo && CONFIG.promo.activa && c === String(CONFIG.promo.codigo).toUpperCase()) return CONFIG.promo;
+    var m = /^RUTINA(\d{1,2})$/.exec(c);
+    if (m) { var pct = +m[1], ap = aparatosEnBolsa(), tope = ap >= 3 ? 12 : (ap >= 2 ? 8 : 0); if (pct >= 1 && pct <= tope) return { codigo: c, descuento: pct / 100, envioGratis: false, texto: 'Kit de tu rutina: ' + pct + '% de descuento' }; }
+    return null;
+  }
+  function promoActiva() { return !!promoDef(); }
+  function eid() { try { return localStorage.getItem('pulira-eid') || ''; } catch (e) { return ''; } }
   function totales() {
     var sub = 0, n = 0;
     Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) { delete bolsa[id]; return; } sub += p.precio * bolsa[id]; n += bolsa[id]; });
-    var desc = promoActiva() ? Math.round(sub * (CONFIG.promo.descuento || 0)) : 0;
-    var gratis = sub >= CONFIG.envioGratisDesde || (promoActiva() && CONFIG.promo.envioGratis);
+    var pd = promoDef(), desc = pd ? Math.round(sub * (pd.descuento || 0)) : 0;
+    var gratis = sub >= CONFIG.envioGratisDesde || !!(pd && pd.envioGratis);
     var envio = n === 0 ? 0 : (gratis ? 0 : CONFIG.envio);
     return { sub: sub, n: n, desc: desc, envio: envio, total: sub - desc + envio };
   }
@@ -201,23 +212,25 @@
     $('t-envio').textContent = t.envio === 0 ? (t.n ? 'Gratis' : '$0') : MXN(t.envio);
     $('t-total').textContent = MXN(t.total);
     $('codigo').value = promo.codigo || '';
-    $('nota-codigo').textContent = promoActiva() ? 'Código ' + CONFIG.promo.codigo + ' aplicado' + (CONFIG.promo.envioGratis ? ': envío gratis' : '') + (CONFIG.promo.descuento ? ' y ' + Math.round(CONFIG.promo.descuento * 100) + '% de descuento' : '') + '.' : (CONFIG.promo && CONFIG.promo.activa ? CONFIG.promo.texto + '.' : '');
+    var pd = promoDef();
+    $('nota-codigo').textContent = pd ? 'Código ' + pd.codigo + ' aplicado' + (pd.envioGratis ? ': envío gratis' : '') + (pd.descuento ? ' y ' + Math.round(pd.descuento * 100) + '% de descuento' : '') + '.' : (promo.codigo ? 'Ese código no aplica a esta bolsa.' : (CONFIG.promo && CONFIG.promo.activa ? CONFIG.promo.texto + '.' : ''));
     $('btn-pedir').disabled = t.n === 0;
     $('btn-pedir').style.opacity = t.n === 0 ? .5 : 1;
     $('btn-pedir').textContent = CONFIG.whatsapp ? 'Pedir por WhatsApp' : 'Copiar pedido';
     $('nota-pedido').textContent = CONFIG.whatsapp ? 'Te confirmamos existencia y forma de pago por WhatsApp. Pagas por transferencia o Mercado Pago.' : (t.n ? 'Canales oficiales próximamente. Tu bolsa se guarda en este navegador.' : '');
   }
-  function agrega(id) { bolsa[id] = (bolsa[id] || 0) + 1; guarda(); pintaBolsa(); abreBolsa(); }
+  function agrega(id) { bolsa[id] = (bolsa[id] || 0) + 1; guarda(); pintaBolsa(); abreBolsa(); if (window.EVENTOS) EVENTOS.emit('add_to_cart', { skus: id, precio: (byId(id) || {}).precio }); }
   function abreBolsa() { $('drawer').classList.add('on'); $('velo').classList.add('on'); }
   function cierraBolsa() { $('drawer').classList.remove('on'); $('velo').classList.remove('on'); }
   function textoPedido(items) {
     var t = totales();
     var lineas = Object.keys(items).map(function (id) { var p = byId(id); return '• ' + items[id] + ' × ' + p.nombre + ' (' + p.codigo + ') — ' + MXN(p.precio * items[id]); });
-    return 'Hola PULIRA, quiero pedir:\n' + lineas.join('\n') + '\nSubtotal ' + MXN(t.sub) + (t.desc ? ' · Descuento −' + MXN(t.desc) : '') + ' · Envío ' + (t.envio ? MXN(t.envio) : 'gratis') + ' · Total ' + MXN(t.total) + (promoActiva() ? '\nCódigo: ' + CONFIG.promo.codigo : '') + '\nNombre:\nCiudad y C.P.:\nPago: transferencia / Mercado Pago';
+    return 'Hola PULIRA, quiero pedir:\n' + lineas.join('\n') + '\nSubtotal ' + MXN(t.sub) + (t.desc ? ' · Descuento −' + MXN(t.desc) : '') + ' · Envío ' + (t.envio ? MXN(t.envio) : 'gratis') + ' · Total ' + MXN(t.total) + (promoDef() ? '\nCódigo: ' + promoDef().codigo : '') + (eid() ? '\nRef: ' + eid() : '') + '\nNombre:\nCiudad y C.P.:\nPago: transferencia / Mercado Pago';
   }
   function pedir() {
     if (!totales().n) return;
     var texto = textoPedido(bolsa);
+    if (window.EVENTOS) EVENTOS.emit('checkout_whatsapp', { precio: totales().total, skus: Object.keys(bolsa).join(','), event_id: eid() || undefined });
     if (CONFIG.whatsapp) { window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(texto), '_blank'); return; }
     var ok = function () { $('nota-pedido').textContent = 'Pedido copiado. Pégalo en el chat cuando abramos canales.'; };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(texto).then(ok, function () { window.prompt('Copia tu pedido:', texto); });
@@ -284,4 +297,5 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { cierraFicha(); cierraBolsa(); } });
 
   pintaPicks(); pintaKits(); pintaChips(); pintaGrid(); pintaBolsa();
+  if (/[?&]abrir=bolsa/.test(location.search)) abreBolsa();  // rutina.html manda aquí con el kit ya en la bolsa
 })();
