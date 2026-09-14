@@ -1,68 +1,113 @@
-/* PULIRA · fotos disponibles por producto (principal, detalle, empaque). Lo escriben las herramientas de fotos; la tienda usa la foto solo si está aquí. */
+/* PULIRA · fotos disponibles por producto (principal, detalle, empaque). Lo escribe herramientas/guarda_gemini.py; la tienda usa la foto solo si está aquí. */
 var FOTOS = {
   "cepillo-facial": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "cepillo-secador": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "espatula-ultrasonica": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto"
   ],
   "espejo-led": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "esponjas-x4": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "gua-sha-electrico": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "kit-cabello": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto"
   ],
   "kit-glow": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "kit-rutina": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "lampara-unas": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "limpiador-brochas": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "masajeador-cabelludo": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "mascara-led": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "microcorriente": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto"
   ],
   "removedor-puntos": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "vaporizador": [
     "principal",
-    "detalle"
+    "frente",
+    "detalle",
+    "contexto",
+    "empaque"
   ],
   "hero": true,
   "coleccion": true
