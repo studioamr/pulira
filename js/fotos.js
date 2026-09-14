@@ -18,7 +18,8 @@ var FOTOS = {
     "principal",
     "frente",
     "detalle",
-    "contexto"
+    "contexto",
+    "empaque"
   ],
   "espejo-led": [
     "principal",
@@ -45,7 +46,8 @@ var FOTOS = {
     "principal",
     "frente",
     "detalle",
-    "contexto"
+    "contexto",
+    "empaque"
   ],
   "kit-glow": [
     "principal",
@@ -93,7 +95,8 @@ var FOTOS = {
     "principal",
     "frente",
     "detalle",
-    "contexto"
+    "contexto",
+    "empaque"
   ],
   "removedor-puntos": [
     "principal",
