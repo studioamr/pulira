@@ -21,17 +21,27 @@
     carril.appendChild(frag); pasadas++;
     // no dejar crecer el DOM sin límite: se quitan las primeras figuras cuando ya quedaron muy atrás
     while (carril.children.length > MAX_FIG) {
-      var p = carril.firstElementChild, w = p.getBoundingClientRect().width + 14;
+      var p = carril.firstElementChild; if (!p || p.tagName !== 'FIGURE') break; var w = p.getBoundingClientRect().width + 14;
       if (carril.scrollLeft < w * 2) break;
       carril.removeChild(p); carril.scrollLeft -= w;
     }
   }
   pasada(); pasada();
+  // centinela al final del carril: cuando se asoma, se agrega otra pasada (funciona aunque el evento scroll no llegue)
+  var fin = document.createElement('div'); fin.className = 'fin'; fin.setAttribute('aria-hidden', 'true'); carril.appendChild(fin);
   var ocupado = false;
-  carril.addEventListener('scroll', function () {
+  function revisa() {
     if (ocupado) return;
-    if (carril.scrollLeft + carril.clientWidth > carril.scrollWidth - carril.clientWidth * 1.5) { ocupado = true; pasada(); ocupado = false; }
-  }, { passive: true });
+    if (carril.scrollLeft + carril.clientWidth > carril.scrollWidth - carril.clientWidth * 1.5) {
+      ocupado = true; pasada(); carril.appendChild(fin); ocupado = false;
+    }
+  }
+  carril.addEventListener('scroll', revisa, { passive: true });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { pasada(); carril.appendChild(fin); } }); }, { root: carril, rootMargin: '0px 800px 0px 0px' }).observe(fin);
+  }
+  // las primeras miniaturas cargan de inmediato (las demás siguen lazy)
+  Array.prototype.slice.call(carril.querySelectorAll('img'), 0, 6).forEach(function (i) { i.loading = 'eager'; });
   carril.addEventListener('click', function (e) {
     var b = e.target.closest('button.play'); if (!b) return;
     var f = b.closest('figure'), id = f.dataset.id;
