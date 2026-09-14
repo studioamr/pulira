@@ -13,6 +13,10 @@
   var COPY = window.COPY || {}, FOTOS = window.FOTOS || {};
   var app = $('app');
   if (!app || !DIAG) return;
+  var EMBED = /[?&]embed=1/.test(location.search);   // incrustada en la tienda (iframe): sin header/footer, y "Armar mi kit" enlaza a las fichas de la tienda
+  var TIENDAS = { amboras: 'https://my-store-0ws91dzq.amboras.com/products/' };
+  var mt = /[?&]tienda=(\w+)/.exec(location.search); if (mt && TIENDAS[mt[1]]) CFG.amboras = TIENDAS[mt[1]];
+  if (EMBED) document.documentElement.classList.add('embed');
 
   var EJE = { lum: 'Luminosidad y manchas', firm: 'Firmeza y líneas', poros: 'Poros, puntos negros o grasa', tex: 'Textura y brotes', hidra: 'Hidratación', maq: 'Maquillaje que asiente mejor', cab: 'Cabello con forma, sin frizz', unas: 'Uñas de gel en casa', relax: 'Relajarme y desinflamar' };
   var EJE_CORTO = { lum: 'luminosidad', firm: 'firmeza', poros: 'poros más limpios', tex: 'mejor textura', hidra: 'hidratación', maq: 'mejor maquillaje', cab: 'cabello con forma', unas: 'uñas en casa', relax: 'relajarte' };
@@ -101,7 +105,11 @@
     $('atras').onclick = function () { if (S.paso === 0) S.vista = 'inicio'; else S.paso--; render(); };
     if ($('sigue')) $('sigue').onclick = avanzar;
   }
-  function avanzar() { EV.emit('diag_step', { n: S.paso + 1, event_id: S.event_id }); if (S.paso < N - 1) { S.paso++; S.vista = 'paso'; render(); } else calcular(); }
+  function avanzar() {
+    EV.emit('diag_step', { n: S.paso + 1, event_id: S.event_id });
+    try { document.dispatchEvent(new CustomEvent('pulira:paso', { detail: { n: S.paso + 1, total: N } })); } catch (e) {}
+    if (S.paso < N - 1) { S.paso++; S.vista = 'paso'; render(); } else calcular();
+  }
 
   /* ---- cámara (opt-in, todo local) ---- */
   function camara() {
@@ -201,6 +209,8 @@
     html += '<div class="res-total"><div><span class="precio">' + MXN(total) + '</span>' + (sueltos > total ? '<s>' + MXN(sueltos) + '</s>' : '') +
       (k.ahorro > 0 ? '<span class="ahorro">Ahorras ' + MXN(k.ahorro) + (k.descuento ? ' · ' + Math.round(k.descuento * 100) + '% con el código ' + codigo(k) : ' vs. piezas sueltas') + '</span>' : '') + '</div>' +
       '<div class="entrega">' + (envio ? 'Envío $' + envio + ' · gratis desde ' + MXN(CFG.envioGratisDesde || 999) : 'Envío gratis') + '<br>Garantía 12 meses · cambio en 30 días</div></div>';
+    var prem = window.DINAMICAS && DINAMICAS.resumenPremio(total, aparatos.length);
+    if (prem) html += '<div class="desbloqueo"><b>' + (prem.aplica ? 'Tu premio de la ruleta' : 'Tu premio de la ruleta, casi') + '</b>' + esc(prem.texto) + '</div>';
     if (aparatos.length < 3 && res.alternativas.length) {
       var alt = res.alternativas.filter(function (id) { return extras.indexOf(id) < 0; })[0];
       if (alt) html += '<div class="sube"><div><b>Súmale ' + esc(nombre(alt)) + '</b>' + esc(beneficio(alt)) + '</div><button class="btn" type="button" data-suma="' + alt + '">+ ' + MXN(precio(alt)) + '</button></div>';
@@ -215,6 +225,7 @@
     app.innerHTML = html;
     enlaza(res, k.skus.concat(extras));
     explicaRemota(res, aparatos);
+    if (!S.confeti) { S.confeti = true; guardar(); try { document.dispatchEvent(new CustomEvent('pulira:resultado', { detail: { kit: k.id, total: total, aparatos: aparatos.length } })); } catch (e) {} }
   }
   function codigo(k) { var pct = Math.round(k.descuento * 100); return (CFG.codigosRutina || {})[pct] || ('RUTINA' + pct); }
   function legal(res, excl) {
@@ -229,8 +240,16 @@
     Array.prototype.forEach.call(app.querySelectorAll('[data-quita]'), function (b) { b.onclick = function () { S.extras = (S.extras || []).filter(function (x) { return x !== b.dataset.quita; }); render(true); }; });
     if ($('armar')) $('armar').onclick = function () {
       var lista = $('armar').dataset.ids.split(',').filter(Boolean), bolsa = {};
-      try { bolsa = JSON.parse(localStorage.getItem('pulira-bolsa') || '{}'); } catch (e) {}
       if (DIAG.KITS[k.id]) { var K = DIAG.KITS[k.id]; lista = [k.id].concat(lista.filter(function (id) { return K.skus.indexOf(id) < 0; })); }
+      if (EMBED && CFG.amboras) {   // dentro de la tienda: enlaces a cada ficha + código, y aviso al padre por si la tienda arma el carrito sola (postMessage)
+        var cod = k.descuento > 0 ? codigo(k) : '';
+        try { window.parent.postMessage({ tipo: 'pulira-kit', kit_id: k.id, skus: lista, precio: k.precio, codigo: cod, event_id: S.event_id }, '*'); } catch (e) {}
+        EV.emit('kit_cta_click', { destino: 'amboras', kit_id: k.id, precio: k.precio, event_id: S.event_id });
+        var caja = document.createElement('div'); caja.className = 'desbloqueo';
+        caja.innerHTML = '<b>Agrega tu kit en la tienda</b>' + lista.map(function (id) { return '<a class="btn linea chico" style="margin:6px 6px 0 0" href="' + esc(CFG.amboras + id) + '" target="_top">' + esc(nombre(id)) + '</a>'; }).join('') + (cod ? '<p class="rut-nota">Tu código de descuento: <b>' + esc(cod) + '</b>. Escríbelo al pagar.</p>' : '');
+        $('armar').replaceWith(caja); return;
+      }
+      try { bolsa = JSON.parse(localStorage.getItem('pulira-bolsa') || '{}'); } catch (e) {}
       lista.forEach(function (id) { if (CAT[id] && !bolsa[id]) bolsa[id] = 1; });
       try {
         localStorage.setItem('pulira-bolsa', JSON.stringify(bolsa));

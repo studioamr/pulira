@@ -160,19 +160,41 @@
   /* ---- bolsa ---- */
   function guarda() { try { localStorage.setItem('pulira-bolsa', JSON.stringify(bolsa)); localStorage.setItem('pulira-promo', JSON.stringify(promo)); } catch (e) {} }
   function aparatosEnBolsa() { var n = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) return; if (p.componentes) n += p.componentes.length; else if (['esponjas-x4', 'limpiador-brochas', 'espejo-led'].indexOf(id) < 0) n += bolsa[id]; }); return n; }
-  function promoDef() {  // promo de lanzamiento (CONFIG.promo) o código RUTINAn del kit personalizado de rutina.html (2 aparatos hasta 8 %, 3 hasta 12 %)
-    var c = String(promo.codigo || '').toUpperCase(); if (!c) return null;
-    if (CONFIG.promo && CONFIG.promo.activa && c === String(CONFIG.promo.codigo).toUpperCase()) return CONFIG.promo;
-    var m = /^RUTINA(\d{1,2})$/.exec(c);
-    if (m) { var pct = +m[1], ap = aparatosEnBolsa(), tope = ap >= 3 ? 12 : (ap >= 2 ? 8 : 0); if (pct >= 1 && pct <= tope) return { codigo: c, descuento: pct / 100, envioGratis: false, texto: 'Kit de tu rutina: ' + pct + '% de descuento' }; }
-    return null;
+  function premioGuardado() { try { var p = JSON.parse(localStorage.getItem('pulira-premio') || 'null'); return p && p.codigo && (!p.vence || p.vence > Date.now()) ? p : null; } catch (e) { return null; } }
+  function subtotalBruto() { var sub = 0; Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (p) sub += p.precio * bolsa[id]; }); return sub; }
+  function evalCodigo(c, sub, ap) {  // → { codigo, desc ($), envioGratis, regalo, texto, pendiente } o null si el código no existe
+    c = String(c || '').toUpperCase(); if (!c) return null;
+    if (CONFIG.promo && CONFIG.promo.activa && c === String(CONFIG.promo.codigo).toUpperCase()) return { codigo: c, desc: Math.round(sub * (CONFIG.promo.descuento || 0)), envioGratis: !!CONFIG.promo.envioGratis, texto: CONFIG.promo.texto };
+    var m = /^RUTINA(\d{1,2})$/.exec(c);   // kit personalizado de rutina.html: 2 aparatos hasta 8 %, 3 hasta 12 %
+    if (m) { var pct = +m[1], tope = ap >= 3 ? 12 : (ap >= 2 ? 8 : 0); return pct >= 1 && pct <= 12 ? (pct <= tope ? { codigo: c, desc: Math.round(sub * pct / 100), texto: 'Kit de tu rutina: ' + pct + '% de descuento' } : { codigo: c, desc: 0, texto: 'Kit de tu rutina: ' + pct + '% de descuento', pendiente: 'Aplica con ' + (pct > 8 ? '3' : '2') + ' aparatos en la bolsa.' }) : null; }
+    var pr = (window.PREMIOS || {})[c];   // premios de la ruleta (js/dinamicas.js)
+    if (!pr) return null;
+    var regalo = pr.regalo && byId(pr.regalo), mitad = pr.mitad && byId(pr.mitad);
+    var base = sub - (regalo && bolsa[pr.regalo] ? regalo.precio : 0);   // el mínimo se mide sin el regalo
+    if (pr.min && base < pr.min) return { codigo: c, desc: 0, texto: pr.texto, pendiente: 'Aplica en pedidos desde ' + MXN(pr.min) + ': te faltan ' + MXN(pr.min - base) + '.' };
+    if (pr.minAparatos && ap < pr.minAparatos) return { codigo: c, desc: 0, texto: pr.texto, pendiente: 'Aplica en kits de ' + pr.minAparatos + ' aparatos.' };
+    if (regalo) return { codigo: c, desc: bolsa[pr.regalo] ? regalo.precio : 0, regalo: pr.regalo, texto: pr.texto };
+    if (mitad) return bolsa[pr.mitad] ? { codigo: c, desc: Math.round(mitad.precio / 2), texto: pr.texto } : { codigo: c, desc: 0, texto: pr.texto, pendiente: 'Agrega el limpiador de brochas a la bolsa para que aplique.' };
+    return { codigo: c, desc: Math.round(sub * (pr.descuento || 0)), envioGratis: !!pr.envioGratis, texto: pr.texto };
   }
-  function promoActiva() { return !!promoDef(); }
+  function candidatos() {
+    var sub = subtotalBruto(), ap = aparatosEnBolsa(), pr = premioGuardado(), c1 = evalCodigo(promo.codigo, sub, ap);
+    var c2 = pr && (!c1 || c1.codigo !== pr.codigo) ? evalCodigo(pr.codigo, sub, ap) : null;
+    var valor = function (d) { return d.desc + (d.envioGratis && sub > 0 && sub < CONFIG.envioGratisDesde ? CONFIG.envio : 0); };
+    return [c1, c2].filter(Boolean).sort(function (a, b) { return valor(b) - valor(a); });
+  }
+  function promoDef() { return candidatos()[0] || null; }   // el mejor de: código escrito/guardado y premio de la ruleta (no se suman)
+  function promoActiva() { var d = promoDef(); return !!(d && (d.desc || d.envioGratis)); }
+  function asegurarRegalo() {  // premio de regalo con el mínimo cumplido → una pieza del regalo entra sola a la bolsa
+    var pr = premioGuardado(), def = pr && (window.PREMIOS || {})[pr.codigo];
+    if (!def || !def.regalo || bolsa[def.regalo] || !byId(def.regalo) || subtotalBruto() < (def.min || 0)) return false;
+    bolsa[def.regalo] = 1; return true;
+  }
   function eid() { try { return localStorage.getItem('pulira-eid') || ''; } catch (e) { return ''; } }
   function totales() {
     var sub = 0, n = 0;
     Object.keys(bolsa).forEach(function (id) { var p = byId(id); if (!p) { delete bolsa[id]; return; } sub += p.precio * bolsa[id]; n += bolsa[id]; });
-    var pd = promoDef(), desc = pd ? Math.round(sub * (pd.descuento || 0)) : 0;
+    var pd = promoDef(), desc = pd ? Math.min(sub, pd.desc || 0) : 0;
     var gratis = sub >= CONFIG.envioGratisDesde || !!(pd && pd.envioGratis);
     var envio = n === 0 ? 0 : (gratis ? 0 : CONFIG.envio);
     return { sub: sub, n: n, desc: desc, envio: envio, total: sub - desc + envio };
@@ -197,6 +219,7 @@
     return out.slice(0, 2);
   }
   function pintaBolsa() {
+    if (asegurarRegalo()) guarda();
     var t = totales();
     $('bolsa-n').textContent = t.n;
     var ids = Object.keys(bolsa);
@@ -212,8 +235,14 @@
     $('t-envio').textContent = t.envio === 0 ? (t.n ? 'Gratis' : '$0') : MXN(t.envio);
     $('t-total').textContent = MXN(t.total);
     $('codigo').value = promo.codigo || '';
-    var pd = promoDef();
-    $('nota-codigo').textContent = pd ? 'Código ' + pd.codigo + ' aplicado' + (pd.envioGratis ? ': envío gratis' : '') + (pd.descuento ? ' y ' + Math.round(pd.descuento * 100) + '% de descuento' : '') + '.' : (promo.codigo ? 'Ese código no aplica a esta bolsa.' : (CONFIG.promo && CONFIG.promo.activa ? CONFIG.promo.texto + '.' : ''));
+    var cs = candidatos(), pd = cs[0] || null, otro = cs[1] || null, nota;
+    if (pd && (pd.desc || pd.envioGratis)) nota = 'Código ' + pd.codigo + ' aplicado: ' + pd.texto + (pd.desc ? ' (−' + MXN(pd.desc) + ')' : '') + '.';
+    else if (pd && pd.pendiente) nota = pd.codigo + ': ' + pd.texto + '. ' + pd.pendiente;
+    else nota = promo.codigo ? 'Ese código no existe.' : (CONFIG.promo && CONFIG.promo.activa ? CONFIG.promo.texto + '.' : '');
+    if (otro && otro.pendiente) nota += ' Tu otro código ' + otro.codigo + ' (' + otro.texto.toLowerCase() + '): ' + otro.pendiente.charAt(0).toLowerCase() + otro.pendiente.slice(1);
+    else if (otro && (otro.desc || otro.envioGratis)) nota += ' Los códigos no se suman: aplicamos el que más te conviene.';
+    $('nota-codigo').textContent = nota;
+    $('fila-desc').firstElementChild.textContent = pd && pd.regalo && pd.desc ? 'Regalo (' + pd.codigo + ')' : 'Descuento' + (pd && pd.desc ? ' (' + pd.codigo + ')' : '');
     $('btn-pedir').disabled = t.n === 0;
     $('btn-pedir').style.opacity = t.n === 0 ? .5 : 1;
     $('btn-pedir').textContent = CONFIG.whatsapp ? 'Pedir por WhatsApp' : 'Copiar pedido';
@@ -225,7 +254,7 @@
   function textoPedido(items) {
     var t = totales();
     var lineas = Object.keys(items).map(function (id) { var p = byId(id); return '• ' + items[id] + ' × ' + p.nombre + ' (' + p.codigo + ') — ' + MXN(p.precio * items[id]); });
-    return 'Hola PULIRA, quiero pedir:\n' + lineas.join('\n') + '\nSubtotal ' + MXN(t.sub) + (t.desc ? ' · Descuento −' + MXN(t.desc) : '') + ' · Envío ' + (t.envio ? MXN(t.envio) : 'gratis') + ' · Total ' + MXN(t.total) + (promoDef() ? '\nCódigo: ' + promoDef().codigo : '') + (eid() ? '\nRef: ' + eid() : '') + '\nNombre:\nCiudad y C.P.:\nPago: transferencia / Mercado Pago';
+    return 'Hola PULIRA, quiero pedir:\n' + lineas.join('\n') + '\nSubtotal ' + MXN(t.sub) + (t.desc ? ' · Descuento −' + MXN(t.desc) : '') + ' · Envío ' + (t.envio ? MXN(t.envio) : 'gratis') + ' · Total ' + MXN(t.total) + (promoDef() && (promoDef().desc || promoDef().envioGratis) ? '\nCódigo: ' + promoDef().codigo + ' (' + promoDef().texto + ')' : '') + (eid() ? '\nRef: ' + eid() : '') + '\nNombre:\nCiudad y C.P.:\nPago: transferencia / Mercado Pago';
   }
   function pedir() {
     if (!totales().n) return;
@@ -297,5 +326,7 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { cierraFicha(); cierraBolsa(); } });
 
   pintaPicks(); pintaKits(); pintaChips(); pintaGrid(); pintaBolsa();
+  var mc = /[?&]codigo=([A-Za-z0-9]{2,20})/.exec(location.search);   // ?codigo=GIRO5 desde un pop-up o la tienda
+  if (mc) { promo.codigo = mc[1].toUpperCase(); guarda(); pintaBolsa(); }
   if (/[?&]abrir=bolsa/.test(location.search)) abreBolsa();  // rutina.html manda aquí con el kit ya en la bolsa
 })();
